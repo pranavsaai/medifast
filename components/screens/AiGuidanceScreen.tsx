@@ -1,196 +1,155 @@
 'use client';
-// components/screens/AiGuidanceScreen.tsx
-// The live AI chat screen — replaces static GuidanceScreen for AI flow.
-// Shows Gemini's Instruction + Check, user taps YES / NO, loops until
-// COMPLETE or ESCALATE.
-
 import { useState } from 'react';
 import { useApp } from '@/lib/store';
 import { emergencyData } from '@/lib/emergencyData';
 import { sendAnswer } from '@/lib/aiService';
-import FlowStrip from '@/components/ui/FlowStrip';
 import Toast from '@/components/ui/Toast';
 import styles from './AiGuidanceScreen.module.css';
 
 export default function AiGuidanceScreen() {
-  const {
-    selected,
-    aiResponse,
-    setAiResponse,
-    setAiLoading,
-    setScreen,
-    aiLoading,
-  } = useApp();
-
+  const { selected, aiResponse, setAiResponse, setAiLoading, setScreen, aiLoading, pushStepHistory } = useApp();
   const [toast, setToast] = useState<string | null>(null);
-  const [stepHistory, setStepHistory] = useState<string[]>([]);
+  const [answerAnim, setAnswerAnim] = useState<'yes' | 'no' | null>(null);
 
   if (!selected) return null;
   const data = emergencyData[selected];
 
-  // ── Status: escalate ───────────────────────────────────────────────────────
+  // ── ESCALATE ────────────────────────────────────────────────────────────────
   if (aiResponse?.status === 'escalate') {
     return (
-      <section className={styles.endScreen}>
-        <div className={`${styles.endCard} ${styles.danger}`}>
-          <div className={styles.endIcon}>🚨</div>
-          <h2>Call Emergency Services Now</h2>
+      <main className={styles.endPage}>
+        <div className={`${styles.endCard} ${styles.danger} animate-up`}>
+          <div className={styles.endRing}>
+            <span>🚨</span>
+          </div>
+          <h2>Call 112 Now</h2>
           <p>{aiResponse.instruction}</p>
-          <button
-            className={`${styles.callBtn}`}
-            onClick={() => window.open('tel:112')}
-          >
-            📞 Call 112
-          </button>
-          <button className={styles.homeBtn} onClick={() => setScreen('home')}>
-            Return Home
-          </button>
+          <a href="tel:112" className={styles.callBig}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/>
+            </svg>
+            Call 112 — Emergency
+          </a>
+          <button className={styles.ghostBtn} onClick={() => setScreen('home')}>Return Home</button>
         </div>
-      </section>
+      </main>
     );
   }
 
-  // ── Status: complete ───────────────────────────────────────────────────────
+  // ── COMPLETE ────────────────────────────────────────────────────────────────
   if (aiResponse?.status === 'complete') {
     return (
-      <section className={styles.endScreen}>
-        <div className={`${styles.endCard} ${styles.success}`}>
-          <div className={styles.endIcon}>✅</div>
-          <h2>Guidance Complete</h2>
+      <main className={styles.endPage}>
+        <div className={`${styles.endCard} ${styles.success} animate-up`}>
+          <div className={`${styles.endRing} ${styles.successRing}`}>
+            <span>✅</span>
+          </div>
+          <h2>All Done</h2>
           <p>{aiResponse.instruction}</p>
-
-          {stepHistory.length > 0 && (
-            <div className={styles.historyBox}>
-              <h4>Steps followed:</h4>
-              <ul>
-                {stepHistory.map((s, i) => (
-                  <li key={i}>{s}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <button
-            className={styles.reportBtn}
-            onClick={() => setScreen('report')}
-          >
-            📄 View Report
+          <button className={styles.reportBtn} onClick={() => setScreen('report')}>
+            See full report
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
           </button>
-          <button className={styles.homeBtn} onClick={() => setScreen('home')}>
-            Return Home
-          </button>
+          <button className={styles.ghostBtn} onClick={() => setScreen('home')}>Return Home</button>
         </div>
-      </section>
+      </main>
     );
   }
 
-  // ── Status: instruction (normal step) ─────────────────────────────────────
+  // ── INSTRUCTION ─────────────────────────────────────────────────────────────
   const handleAnswer = async (answer: 'Yes' | 'No') => {
     if (aiLoading) return;
-
-    // Save current instruction to history
-    if (aiResponse?.instruction) {
-      setStepHistory(prev => [...prev, aiResponse.instruction]);
-    }
-
+    setAnswerAnim(answer === 'Yes' ? 'yes' : 'no');
+    if (aiResponse?.instruction) pushStepHistory(aiResponse.instruction);
     setAiLoading(true);
-    setToast(answer === 'Yes' ? '✅ Moving to next step...' : '🔄 Retrying step...');
-
+    setTimeout(() => setAnswerAnim(null), 400);
     try {
       const next = await sendAnswer(answer);
       setAiResponse(next);
-    } catch (err) {
-      console.error(err);
-      const msg = (err as any)?.message?.includes('429')
-        ? '⏳ Rate limited — retrying automatically...'
-        : '⚠️ Network error — please try again';
-        setToast(msg);
+    } catch {
+      setToast('⚠️ Connection issue — please try again');
     } finally {
       setAiLoading(false);
     }
   };
 
   return (
-    <section className={styles.guidance}>
-      <div className={styles.flowStripContainer}>
-        <FlowStrip current="guidance" />
+    <main className={styles.page}>
+      {/* Emergency label */}
+      <div className={`${styles.emergencyTag} animate-up`} style={{ '--c': data.color } as React.CSSProperties}>
+        {data.emoji} {data.label}
       </div>
 
-      {/* Severity banner */}
-      <div className={`${styles.banner} ${data.severity === 'critical' ? styles.bannerCritical : styles.bannerHigh}`}>
-        <span className={styles.bannerIcon}>{data.emoji}</span>
-        <div className={styles.bannerText}>
-          <strong>{data.sevTitle}</strong>
-          <p>{data.sevSub}</p>
-        </div>
-        <button className={styles.callBtn} onClick={() => window.open('tel:112')}>
-          📞 112
-        </button>
-      </div>
-
-      {/* Step counter */}
-      {stepHistory.length > 0 && (
-        <div className={styles.stepCounter}>
-          Step {stepHistory.length + 1} &nbsp;·&nbsp; {data.label}
-        </div>
-      )}
-
-      {/* Main AI instruction card */}
-      <div className={`${styles.instructionCard} ${aiLoading ? styles.loading : ''}`}>
+      {/* Instruction card */}
+      <div className={`${styles.instructionCard} animate-up d1 ${aiLoading ? styles.loadingCard : ''}`}
+           style={{ '--c': data.color, '--g': data.glow } as React.CSSProperties}>
         {aiLoading ? (
-          <div className={styles.loadingInner}>
-            <div className={styles.spinner} />
-            <p>AI is thinking...</p>
+          <div className={styles.loadingState}>
+            <div className={styles.thinkingDots}>
+              <span /><span /><span />
+            </div>
+            <p>Preparing next step...</p>
           </div>
         ) : (
           <>
-            <div className={styles.aiTag}>🧠 AI Guidance</div>
-            <p className={styles.instruction}>
-              {aiResponse?.instruction ?? 'Waiting for AI...'}
-            </p>
+            <div className={styles.stepBadge}>What to do</div>
+            <p className={styles.instruction}>{aiResponse?.instruction}</p>
           </>
         )}
       </div>
 
       {/* Check question */}
       {!aiLoading && aiResponse?.check && (
-        <div className={styles.checkCard}>
-          <p className={styles.checkLabel}>CHECK</p>
+        <div className={`${styles.checkCard} animate-up d2`}>
+          <div className={styles.checkIcon}>?</div>
           <p className={styles.checkText}>{aiResponse.check}</p>
         </div>
       )}
 
-      {/* YES / NO buttons */}
-      <div className={styles.actions}>
+      {/* YES / NO */}
+      <div className={`${styles.actions} animate-up d3`}>
         <button
-          className={`${styles.btn} ${styles.btnYes}`}
-          onClick={() => handleAnswer('Yes')}
-          disabled={aiLoading}
-        >
-          ✅ YES
-        </button>
-        <button
-          className={`${styles.btn} ${styles.btnNo}`}
+          className={`${styles.btnNo} ${answerAnim === 'no' ? styles.btnPressed : ''}`}
           onClick={() => handleAnswer('No')}
           disabled={aiLoading}
         >
-          ❌ NO
+          <span className={styles.btnIcon}>✗</span>
+          <span>Not yet</span>
+        </button>
+        <button
+          className={`${styles.btnYes} ${answerAnim === 'yes' ? styles.btnPressed : ''}`}
+          onClick={() => handleAnswer('Yes')}
+          disabled={aiLoading}
+        >
+          <span className={styles.btnIcon}>✓</span>
+          <span>Done</span>
         </button>
       </div>
 
-      {/* Step history (collapsible feel) */}
-      {stepHistory.length > 0 && (
-        <div className={styles.history}>
-          <p className={styles.historyLabel}>✓ Steps completed so far</p>
-          <ul className={styles.historyList}>
-            {stepHistory.map((s, i) => (
-              <li key={i}>{s}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {/* Step history */}
+      <CompletedSteps />
 
       {toast && <Toast message={toast} onDone={() => setToast(null)} />}
-    </section>
+    </main>
+  );
+}
+
+function CompletedSteps() {
+  const { stepHistory } = useApp();
+  if (stepHistory.length === 0) return null;
+  return (
+    <div className={styles.history}>
+      <p className={styles.historyLabel}>Steps done ({stepHistory.length})</p>
+      <div className={styles.historyList}>
+        {stepHistory.map((s, i) => (
+          <div key={i} className={styles.historyItem}>
+            <span className={styles.historyCheck}>✓</span>
+            <span>{s}</span>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

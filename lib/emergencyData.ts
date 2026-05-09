@@ -1,30 +1,19 @@
 // lib/emergencyData.ts
-
-export type EmergencyType = 'bleeding' | 'burns' | 'fracture' | 'heart-attack';
-export type Severity = 'critical' | 'high' | 'moderate';
-export type StepStatus = 'done' | 'progress' | 'pending';
-
-export interface MissingItem {
-  item: string;
-  alts: string[];
-}
-
-export interface Step {
-  title: string;
-  detail: string;
-}
+import { EmergencyType } from './store';
 
 export interface EmergencyData {
   key: EmergencyType;
-  label: string;
   emoji: string;
+  label: string;
   tagline: string;
-  severity: Severity;
-  sevTitle: string;
+  color: string;       // accent color for this card
+  glow: string;        // glow rgba
+  severity: 'critical' | 'high' | 'moderate';
+  sevLabel: string;    // user-friendly severity label
   sevSub: string;
   chips: string[];
-  steps: Step[];
-  missing: MissingItem[];
+  steps: { title: string; detail: string }[];
+  missing: { item: string; alts: string[] }[];
   tip: string;
   statusQuestion: string;
   doctorRec: string;
@@ -32,121 +21,159 @@ export interface EmergencyData {
 
 export const emergencyData: Record<EmergencyType, EmergencyData> = {
   bleeding: {
-    key: 'bleeding',
-    label: 'Bleeding',
-    emoji: '🩸',
-    tagline: 'Wounds, cuts, severe blood loss',
-    severity: 'critical',
-    sevTitle: '🚨 Critical — Severe Bleeding',
-    sevSub: 'Immediate action required. Apply pressure now.',
-    chips: [
-      'Bike accident, heavy bleeding',
-      "Cut on arm, won't stop",
-      'Nose bleed lasting 10 min',
-      'Deep wound on leg',
-    ],
+    key: 'bleeding', emoji: '🩸', label: 'Bleeding',
+    tagline: 'Cuts, wounds, heavy blood loss',
+    color: '#FF3B5C', glow: 'rgba(255,59,92,0.3)',
+    severity: 'critical', sevLabel: 'Act immediately',
+    sevSub: 'Apply pressure right now.',
+    chips: ['Bike accident, bleeding badly', 'Deep cut on hand', 'Wound not stopping', 'Bleeding from leg'],
     steps: [
-      { title: 'Apply firm pressure', detail: 'Use a clean cloth or bandage and press directly on the wound continuously for at least 10 minutes.' },
-      { title: 'Elevate the injured area', detail: 'Raise the bleeding part above the level of the heart to slow blood flow.' },
-      { title: 'Keep patient calm', detail: 'Reassure the person. Anxiety increases heart rate and blood loss.' },
-      { title: 'Do NOT remove the cloth', detail: "If it soaks through, add more material on top — removing it disrupts clotting." },
+      { title: 'Press firmly on the wound', detail: 'Use a clean cloth or any fabric. Press hard and keep pressing without lifting.' },
+      { title: 'Raise the injured part', detail: 'Lift the bleeding area above the heart level to help slow blood flow.' },
+      { title: 'Keep the person calm', detail: 'Speak reassuringly. Panic makes things worse.' },
+      { title: 'Do not remove the cloth', detail: 'If blood soaks through, add more material on top. Never remove the first layer.' },
     ],
     missing: [
-      { item: 'Bandage', alts: ['Clean cloth', 'Torn shirt strips', 'Sanitary napkin'] },
-      { item: 'Antiseptic', alts: ['Clean water', 'Soap and water'] },
+      { item: 'Bandage', alts: ['Any clean cloth', 'T-shirt strips', 'Napkin'] },
+      { item: 'Antiseptic', alts: ['Clean tap water', 'Soap and water'] },
     ],
-    tip: 'Applying continuous pressure for at least **10–15 minutes** is the most effective intervention for external bleeding. Do not peek to check — breaking the seal restarts the clotting process.',
-    statusQuestion: 'Is the bleeding reducing after applying pressure?',
-    doctorRec: 'Patient received immediate first aid for external bleeding. Wound was compressed for 10+ minutes with elevation. Please assess for internal bleeding signs, tetanus prophylaxis requirement, and need for sutures. Blood type and hemoglobin levels may need checking.',
+    tip: 'Keep pressing for at least 10–15 minutes without peeking. Lifting the cloth breaks the clot forming underneath.',
+    statusQuestion: 'Is the bleeding slowing down?',
+    doctorRec: 'Patient received immediate pressure for external bleeding with elevation. Assess for internal bleeding, tetanus need, and possible sutures.',
   },
   burns: {
-    key: 'burns',
-    label: 'Burns',
-    emoji: '🔥',
-    tagline: 'Thermal, chemical, electrical',
-    severity: 'high',
-    sevTitle: '⚠️ High Severity — Burn Injury',
-    sevSub: 'Cool the burn immediately. Do not use ice.',
-    chips: [
-      'Fire touched my hand',
-      'Chemical spilled on skin',
-      'Hot liquid burn',
-      'Sunburn with blisters',
-    ],
+    key: 'burns', emoji: '🔥', label: 'Burns',
+    tagline: 'Heat, chemical or electrical burns',
+    color: '#FF8C42', glow: 'rgba(255,140,66,0.3)',
+    severity: 'high', sevLabel: 'Cool it down now',
+    sevSub: 'Do not use ice. Use cool running water.',
+    chips: ['Touched hot stove', 'Hot water spilled on skin', 'Chemical burn', 'Cooking accident'],
     steps: [
-      { title: 'Cool with running water', detail: 'Run cool (not cold) water over the burn for 10–20 minutes immediately.' },
-      { title: 'Remove jewelry/clothing', detail: 'Remove watches, rings, belts near the burn area before swelling begins.' },
-      { title: 'Cover with cling film', detail: 'Loosely cover with cling film or a clean non-fluffy material.' },
-      { title: 'Never use butter or ice', detail: 'Ice causes further damage. Butter seals in heat and increases infection risk.' },
+      { title: 'Move away from the heat', detail: 'Get the person away from the source immediately.' },
+      { title: 'Cool under running water', detail: 'Run cool (not cold) water over the burn for 20 minutes.' },
+      { title: 'Remove tight items nearby', detail: 'Gently remove rings, watches or tight clothing near the burn — before swelling starts.' },
+      { title: 'Cover loosely', detail: 'Use a clean cloth or cling wrap laid loosely over the area. Never wrap tightly.' },
     ],
     missing: [
       { item: 'Running water', alts: ['Bottled water', 'Any clean cool liquid'] },
-      { item: 'Cling film', alts: ['Clean plastic bag', 'Non-fluffy cloth'] },
+      { item: 'Covering', alts: ['Clean plastic bag', 'Loose soft cloth'] },
     ],
-    tip: 'Burns are classified by depth. If blisters form or skin turns white/charred, this indicates 2nd or 3rd degree — **immediate hospital care is essential**.',
-    statusQuestion: 'Is the burning sensation reducing after cooling?',
-    doctorRec: 'Patient was treated for burn injury with immediate cooling under running water. Please assess burn depth and percentage of body surface area affected. Tetanus prophylaxis and IV fluids may be required for serious burns.',
+    tip: 'Never use butter, toothpaste, or ice. They trap heat inside and increase infection risk.',
+    statusQuestion: 'Is the burning sensation reducing?',
+    doctorRec: 'Patient treated with immediate water cooling. Assess burn depth and body surface area. Consider tetanus and IV fluids for major burns.',
   },
   fracture: {
-    key: 'fracture',
-    label: 'Fracture',
-    emoji: '🦴',
-    tagline: 'Broken bones, sprains, dislocations',
-    severity: 'moderate',
-    sevTitle: '⚡ Moderate — Possible Fracture',
-    sevSub: 'Immobilize the area. Do not move the patient unnecessarily.',
-    chips: [
-      'Fell from bike, arm twisted',
-      'Cannot move wrist',
-      'Swelling after fall',
-      'Heard a crack sound',
-    ],
+    key: 'fracture', emoji: '🦴', label: 'Fracture',
+    tagline: 'Broken bone, sprain or dislocation',
+    color: '#A78BFA', glow: 'rgba(167,139,250,0.3)',
+    severity: 'moderate', sevLabel: 'Keep it still',
+    sevSub: 'Do not move the injured area.',
+    chips: ['Fell from bike, arm twisted', 'Cannot move wrist', 'Heard a crack', 'Ankle swollen badly'],
     steps: [
-      { title: 'Immobilize the injured area', detail: 'Keep the broken bone still. Do not try to straighten or push bones back.' },
-      { title: 'Apply a splint', detail: 'Use a rigid item (ruler, stick, rolled newspaper) as a splint, padded with cloth.' },
-      { title: 'Apply ice pack', detail: 'Wrap ice in cloth and apply for 20 minutes to reduce swelling.' },
-      { title: 'Elevate if possible', detail: 'Raise the injured limb to reduce swelling. Avoid if spine injury is suspected.' },
+      { title: 'Do not move the bone', detail: 'Keep the injured area completely still. Never try to push or straighten it.' },
+      { title: 'Support it with a splint', detail: 'Use a ruler, stick, or rolled magazine alongside the injury, padded with cloth.' },
+      { title: 'Apply something cold', detail: 'Wrap ice or frozen item in cloth. Apply for 20 minutes to reduce swelling.' },
+      { title: 'Raise if possible', detail: 'Gently lift the injured limb above heart level. Skip this if spine is involved.' },
     ],
     missing: [
-      { item: 'Splint material', alts: ['Ruler', 'Rolled magazine', 'Straight stick'] },
-      { item: 'Ice pack', alts: ['Frozen vegetables in cloth', 'Cold water compress'] },
+      { item: 'Splint', alts: ['Ruler', 'Rolled magazine', 'Straight branch'] },
+      { item: 'Ice pack', alts: ['Frozen peas in cloth', 'Cold wet towel'] },
     ],
-    tip: 'Open fractures (bone visible through skin) are medical emergencies. Cover gently with a clean cloth and go to hospital immediately. Do **not** attempt to push bone back.',
-    statusQuestion: 'Is the pain manageable after immobilization?',
-    doctorRec: 'Patient sustained a suspected fracture and was given immediate first aid including immobilization. Please conduct X-ray imaging to confirm fracture type and location. Assess for vascular or nerve damage in the affected limb.',
+    tip: 'If bone is visible through the skin, cover gently with a clean cloth and go to hospital immediately. Do not push it back.',
+    statusQuestion: 'Is the pain manageable after keeping it still?',
+    doctorRec: 'Suspected fracture treated with immobilization. X-ray required. Check for nerve or vascular damage.',
   },
   'heart-attack': {
-    key: 'heart-attack',
-    label: 'Heart Attack',
-    emoji: '❤️',
+    key: 'heart-attack', emoji: '❤️', label: 'Heart Attack',
     tagline: 'Chest pain, cardiac emergency',
-    severity: 'critical',
-    sevTitle: '🚨 CRITICAL — Possible Heart Attack',
-    sevSub: 'Call emergency services immediately. Every second counts.',
-    chips: [
-      'Chest pain radiating to arm',
-      'Sudden dizziness, nausea',
-      'Heavy pressure on chest',
-      'Shortness of breath',
-    ],
+    color: '#FF3B5C', glow: 'rgba(255,59,92,0.4)',
+    severity: 'critical', sevLabel: 'Call 112 first',
+    sevSub: 'Every second matters. Call now.',
+    chips: ['Chest pain spreading to arm', 'Sudden dizziness and nausea', 'Heavy pressure on chest', 'Cannot breathe properly'],
     steps: [
-      { title: 'Call 112 immediately', detail: 'Do this first. Heart attacks require emergency medical care within minutes.' },
-      { title: 'Make patient sit/lie comfortably', detail: 'Have them sit in a comfortable position — usually sitting up, leaning forward.' },
-      { title: 'Loosen tight clothing', detail: 'Loosen belts, ties, and shirt buttons to ease breathing.' },
-      { title: 'Aspirin if not allergic', detail: 'Give one regular aspirin (325mg) to chew if not allergic and conscious.' },
+      { title: 'Call 112 right now', detail: 'Do this before anything else. Do not wait.' },
+      { title: 'Help them sit comfortably', detail: 'Let them sit up slightly leaning forward — this is easiest to breathe in.' },
+      { title: 'Loosen tight clothing', detail: 'Open shirt buttons, loosen belt and tie immediately.' },
+      { title: 'Give aspirin if available', detail: 'One regular aspirin (325mg) to chew — only if conscious and not allergic.' },
     ],
     missing: [
-      { item: 'Aspirin', alts: ['Contact pharmacy immediately', 'Ask bystanders'] },
-      { item: 'Defibrillator (AED)', alts: ['Check public buildings nearby', 'Airport / Mall AED'] },
+      { item: 'Aspirin', alts: ['Ask nearby people', 'Find a pharmacy immediately'] },
+      { item: 'Defibrillator (AED)', alts: ['Check malls, airports, public buildings nearby'] },
     ],
-    tip: 'If patient becomes unconscious and stops breathing normally, begin CPR immediately. Push hard and fast in the center of the chest — **100–120 compressions per minute**.',
-    statusQuestion: 'Is the patient conscious and breathing normally?',
-    doctorRec: 'Patient presented with signs of cardiac emergency. First aid administered including positional support and aspirin. Immediate ECG, troponin levels, and cardiac imaging required. Patient should be assessed for STEMI/NSTEMI and treated accordingly.',
+    tip: 'If the person becomes unconscious and stops breathing, start CPR — push hard and fast in the center of the chest, 100 times per minute.',
+    statusQuestion: 'Is the person conscious and breathing?',
+    doctorRec: 'Cardiac emergency — positional support and aspirin given. ECG, troponin levels and cardiac imaging urgently required.',
   },
-};
-
-export const severityConfig: Record<Severity, { label: string; color: string; bg: string }> = {
-  critical: { label: 'Critical', color: '#D42B2B', bg: '#FFE8E8' },
-  high:     { label: 'High',     color: '#B06000', bg: '#FFF0D9' },
-  moderate: { label: 'Moderate', color: '#2D6B3A', bg: '#E8F4EA' },
+  choking: {
+    key: 'choking', emoji: '😮‍💨', label: 'Choking',
+    tagline: 'Something stuck in the throat',
+    color: '#38BDF8', glow: 'rgba(56,189,248,0.3)',
+    severity: 'critical', sevLabel: 'Act immediately',
+    sevSub: 'Ask them to cough hard right now.',
+    chips: ['Food stuck in throat', 'Cannot breathe or speak', 'Baby is choking', 'Person turning blue'],
+    steps: [
+      { title: 'Tell them to cough hard', detail: 'Ask the person to cough forcefully. If they can cough or speak, encourage it.' },
+      { title: 'Give 5 back blows', detail: 'Lean them forward, give 5 firm slaps between the shoulder blades with your palm.' },
+      { title: 'Give abdominal thrusts', detail: 'Stand behind them, make a fist above the belly button, pull sharply inward and upward 5 times.' },
+      { title: 'Alternate and repeat', detail: 'Keep alternating 5 back blows and 5 abdominal thrusts until it clears or help arrives.' },
+    ],
+    missing: [],
+    tip: 'For infants under 1 year: use 5 gentle back blows and 5 chest pushes — never abdominal thrusts.',
+    statusQuestion: 'Has the blockage cleared? Can they breathe now?',
+    doctorRec: 'Patient experienced choking episode. Assess airway for residual obstruction and throat injuries.',
+  },
+  fainting: {
+    key: 'fainting', emoji: '💫', label: 'Fainting',
+    tagline: 'Person collapsed or feeling faint',
+    color: '#818CF8', glow: 'rgba(129,140,248,0.3)',
+    severity: 'moderate', sevLabel: 'Lay them down',
+    sevSub: 'Get them flat immediately.',
+    chips: ['Person suddenly collapsed', 'Feeling dizzy and weak', 'About to pass out', 'Lost consciousness briefly'],
+    steps: [
+      { title: 'Lay them flat on their back', detail: 'Help them lie down safely on a flat surface.' },
+      { title: 'Raise their legs', detail: 'Lift both legs about 30cm above heart level to send blood to the brain.' },
+      { title: 'Loosen tight clothing', detail: 'Open buttons, remove ties, loosen anything tight around the neck and waist.' },
+      { title: 'Check breathing', detail: 'Watch for chest movement. If not breathing, call 112 immediately.' },
+    ],
+    missing: [],
+    tip: 'Do not give water or food until the person is fully conscious and sitting up safely.',
+    statusQuestion: 'Has the person regained consciousness?',
+    doctorRec: 'Syncopal episode — patient laid flat with legs elevated. Investigate cause: cardiac, neurological or vasovagal.',
+  },
+  seizure: {
+    key: 'seizure', emoji: '⚡', label: 'Seizure',
+    tagline: 'Convulsions or fits',
+    color: '#FBBF24', glow: 'rgba(251,191,36,0.3)',
+    severity: 'high', sevLabel: 'Keep them safe',
+    sevSub: 'Do not hold them down.',
+    chips: ['Person having a fit', 'Body shaking uncontrollably', 'Fell and convulsing', 'History of epilepsy'],
+    steps: [
+      { title: 'Clear the area', detail: 'Move furniture, sharp objects or anything dangerous away from the person.' },
+      { title: 'Protect the head', detail: 'Place something soft (folded jacket, pillow) under their head.' },
+      { title: 'Never restrain them', detail: 'Do not hold them down or put anything in their mouth.' },
+      { title: 'Turn them on their side', detail: 'Once the shaking stops, gently roll them to the recovery position (on their side).' },
+    ],
+    missing: [],
+    tip: 'Time the seizure. If it lasts more than 5 minutes or they do not regain consciousness, call 112 immediately.',
+    statusQuestion: 'Has the shaking stopped and are they breathing normally?',
+    doctorRec: 'Seizure patient — recovery position applied. Investigate for new onset epilepsy, electrolyte imbalance or head trauma.',
+  },
+  'snake-bite': {
+    key: 'snake-bite', emoji: '🐍', label: 'Snake Bite',
+    tagline: 'Bitten by a snake',
+    color: '#34D399', glow: 'rgba(52,211,153,0.3)',
+    severity: 'critical', sevLabel: 'Get to hospital fast',
+    sevSub: 'Keep the person still. Go now.',
+    chips: ['Snake bit my leg', 'Bite mark on arm', 'Not sure if snake was poisonous', 'Swelling after bite'],
+    steps: [
+      { title: 'Keep them completely still', detail: 'Movement speeds venom spread. Have them sit or lie still immediately.' },
+      { title: 'Keep bite below heart level', detail: 'Let the bitten limb hang lower than the heart.' },
+      { title: 'Remove tight items', detail: 'Take off rings, watches, tight clothing near the bite before swelling starts.' },
+      { title: 'Get to hospital now', detail: 'Call 112 or drive to the nearest emergency room immediately. Do not wait.' },
+    ],
+    missing: [],
+    tip: 'Never suck out the venom, cut the wound, or apply ice or a tourniquet. These make things worse.',
+    statusQuestion: 'Are you on the way to a hospital?',
+    doctorRec: 'Snake bite — limb immobilized and kept dependent. Identify snake species if possible. Administer antivenom per protocol.',
+  },
 };

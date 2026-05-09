@@ -1,83 +1,86 @@
-/* components/screens/AnalyzingScreen.module.css */
-
-.analyzing {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem 2rem;
-  gap: 2rem;
-  min-height: calc(100vh - 64px);
-  position: relative;
-  z-index: 1;
+.page {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: calc(100vh - 60px);
+  padding: 40px 24px;
+  gap: 24px; position: relative; z-index: 1;
 }
 
-.ring {
-  width: 120px;
-  height: 120px;
-  position: relative;
+/* Rings */
+.ringWrap { position: relative; width: 140px; height: 140px; }
+
+.ring1, .ring2, .ring3 {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 1.5px solid var(--red);
+  animation: ringPulse 2.4s ease-out infinite;
+}
+.ring2 { animation-delay: 0.6s; }
+.ring3 { animation-delay: 1.2s; }
+
+@keyframes ringPulse {
+  0%   { transform: scale(0.7); opacity: 0.8; }
+  100% { transform: scale(1.6); opacity: 0; }
 }
 
-.spinner {
-  animation: spin 2s linear infinite;
+.centerIcon {
+  position: absolute; inset: 0; display: flex;
+  align-items: center; justify-content: center;
+  font-size: 2.8rem; z-index: 2;
+  animation: float 2s ease-in-out infinite;
 }
 
-.innerIcon {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2.5rem;
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
 }
 
 .title {
-  font-family: 'DM Serif Display', serif;
-  font-size: 1.5rem;
-  color: var(--green-dark);
-  text-align: center;
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.7rem; color: var(--t1); text-align: center;
 }
+.sub { font-size: 0.85rem; color: var(--t3); }
 
-.steps {
-  list-style: none;
-  max-width: 400px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
+/* Steps */
+.steps { width: 100%; max-width: 300px; display: flex; flex-direction: column; gap: 6px; }
 
 .step {
-  padding: 10px 16px;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; border-radius: var(--radius-xs);
+  font-size: 0.85rem; color: var(--t3);
   transition: var(--transition);
 }
 
 .stepActive {
-  color: var(--text-primary);
-  background: var(--white);
-  box-shadow: var(--shadow-card);
+  background: var(--surface-2);
+  color: var(--t1);
 }
 
-.stepDone {
-  color: var(--green-mid);
-  font-weight: 500;
+.stepDone { color: var(--green); }
+
+.stepDot {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--surface-2); border: 1px solid var(--border);
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.stepDone .stepDot { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+.stepActive .stepDot { border-color: var(--amber); }
+
+.dotSpinner {
+  width: 8px; height: 8px; border-radius: 50%;
+  border: 1.5px solid transparent;
+  border-top-color: var(--amber);
+  animation: spin 0.7s linear infinite;
 }
 
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: currentColor;
-  flex-shrink: 0;
+/* Error */
+.errorBox {
+  text-align: center; display: flex; flex-direction: column; gap: 16px; align-items: center;
 }
-
-.dotPulse {
-  background: var(--amber);
-  animation: pulse 1s infinite;
+.errorBox p { font-size: 0.9rem; color: var(--t2); line-height: 1.6; max-width: 260px; }
+.retryBtn {
+  background: var(--surface-2); border: 1px solid var(--border-2);
+  color: var(--t1); padding: 10px 22px; border-radius: 100px;
+  font-size: 0.85rem; font-weight: 600; cursor: pointer;
+  font-family: 'Sora', sans-serif; transition: var(--transition);
 }
+.retryBtn:hover { background: var(--surface-3); }
