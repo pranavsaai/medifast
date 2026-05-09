@@ -1,37 +1,47 @@
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap');
 
 :root {
-  /* Core palette — deep midnight with warm accent */
-  --bg:           #080C14;
-  --bg-2:         #0D1320;
-  --bg-3:         #121929;
-  --surface:      rgba(255,255,255,0.04);
-  --surface-2:    rgba(255,255,255,0.07);
-  --surface-3:    rgba(255,255,255,0.11);
-  --border:       rgba(255,255,255,0.08);
-  --border-2:     rgba(255,255,255,0.14);
+  /* ── Your original palette ── */
+  --cream:        #F5F0E8;
+  --cream-dark:   #EDE7D9;
+  --cream-deeper: #E4DCCB;
+  --green-dark:   #1C3A2E;
+  --green-mid:    #2D5A42;
+  --green-light:  #4A7C5E;
+  --amber:        #E8920A;
+  --amber-light:  #F5B942;
+  --amber-pale:   #FFF4E0;
+  --white:        #FFFFFF;
+  --red-alert:    #D42B2B;
+  --red-light:    #FFF0F0;
+  --green-pale:   #EEF5EE;
 
-  /* Accent — electric coral/red for emergency feel */
-  --red:          #FF3B5C;
-  --red-dim:      rgba(255,59,92,0.15);
-  --red-glow:     rgba(255,59,92,0.35);
+  /* ── Mapped to the UI variables the components use ── */
+  --bg:           var(--cream);
+  --bg-2:         var(--cream-dark);
+  --bg-3:         var(--cream-deeper);
+  --surface:      var(--white);
+  --surface-2:    var(--cream-dark);
+  --surface-3:    var(--cream-deeper);
+  --border:       rgba(28,58,46,0.1);
+  --border-2:     rgba(28,58,46,0.18);
 
-  /* Secondary accent — warm amber */
-  --amber:        #FFB347;
-  --amber-dim:    rgba(255,179,71,0.12);
-
-  /* Success */
-  --green:        #00D4AA;
-  --green-dim:    rgba(0,212,170,0.12);
+  /* Accents mapped */
+  --red:          var(--red-alert);
+  --red-dim:      var(--red-light);
+  --red-glow:     rgba(212,43,43,0.25);
+  --amber-dim:    var(--amber-pale);
+  --green:        var(--green-mid);
+  --green-dim:    var(--green-pale);
 
   /* Text */
-  --t1: #F0F4FF;
-  --t2: rgba(240,244,255,0.65);
-  --t3: rgba(240,244,255,0.38);
+  --t1:  #1C2B22;
+  --t2:  #4A5E52;
+  --t3:  #7A8C82;
 
   /* Effects */
-  --shadow-card:  0 4px 24px rgba(0,0,0,0.4);
-  --shadow-glow:  0 0 40px rgba(255,59,92,0.2);
+  --shadow-card:  0 2px 12px rgba(28,58,46,0.08), 0 1px 3px rgba(28,58,46,0.05);
+  --shadow-hover: 0 8px 32px rgba(28,58,46,0.14), 0 2px 8px rgba(28,58,46,0.08);
   --radius:       20px;
   --radius-sm:    12px;
   --radius-xs:    8px;
@@ -43,7 +53,7 @@
 
 html {
   font-family: 'Sora', sans-serif;
-  background: var(--bg);
+  background: var(--cream);
   color: var(--t1);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
@@ -51,42 +61,38 @@ html {
 
 body {
   min-height: 100vh;
-  background: var(--bg);
-  /* subtle noise texture */
+  background: var(--cream);
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255,59,92,0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(255,179,71,0.05) 0%, transparent 50%);
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(28,58,46,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(232,146,10,0.05) 0%, transparent 50%);
 }
 
-/* ── Mobile shell — max 430px centered like a phone ─────────────────────────── */
+/* ── Mobile shell ────────────────────────────────────────────────────── */
 #__next {
   max-width: 430px;
   margin: 0 auto;
   min-height: 100vh;
-  position: relative;
-  background: var(--bg);
-  box-shadow: 0 0 80px rgba(0,0,0,0.8);
+  background: var(--cream);
+  box-shadow: 0 0 60px rgba(28,58,46,0.12);
   overflow: hidden;
+  position: relative;
 }
 
-/* ── Scrollbar ───────────────────────────────────────────────────────────────── */
+/* ── Scrollbar ───────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: rgba(28,58,46,0.2); border-radius: 2px; }
 
-/* ── Keyframes ───────────────────────────────────────────────────────────────── */
-@keyframes fadeUp   { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
-@keyframes fadeIn   { from { opacity:0; } to { opacity:1; } }
-@keyframes slideUp  { from { opacity:0; transform:translateY(100%); } to { opacity:1; transform:translateY(0); } }
-@keyframes pulse    { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } }
-@keyframes spin     { to { transform:rotate(360deg); } }
-@keyframes shimmer  { from { background-position:-200% 0; } to { background-position:200% 0; } }
-@keyframes breathe  { 0%,100% { transform:scale(1); opacity:0.6; } 50% { transform:scale(1.08); opacity:1; } }
-@keyframes float    { 0%,100% { transform:translateY(0px); } 50% { transform:translateY(-8px); } }
-@keyframes ripple   { to { transform:scale(4); opacity:0; } }
+/* ── Keyframes ───────────────────────────────────────────────────────── */
+@keyframes fadeUp  { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
+@keyframes pulse   { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } }
+@keyframes spin    { to { transform:rotate(360deg); } }
+@keyframes float   { 0%,100% { transform:translateY(0px); } 50% { transform:translateY(-8px); } }
+@keyframes breathe { 0%,100% { transform:scale(1); } 50% { transform:scale(1.06); } }
 
-.animate-up   { animation: fadeUp  0.5s cubic-bezier(0.4,0,0.2,1) both; }
-.animate-in   { animation: fadeIn  0.4s ease both; }
+.animate-up { animation: fadeUp 0.5s cubic-bezier(0.4,0,0.2,1) both; }
+.animate-in { animation: fadeIn 0.4s ease both; }
 .d1 { animation-delay: 0.05s; }
 .d2 { animation-delay: 0.12s; }
 .d3 { animation-delay: 0.19s; }

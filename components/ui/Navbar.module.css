@@ -1,12 +1,11 @@
-/* components/ui/Navbar.module.css */
 .nav {
   position: sticky; top: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 20px; height: 60px;
-  background: rgba(8,12,20,0.85);
+  background: rgba(245,240,232,0.88);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(28,58,46,0.1);
 }
 
 .left, .right { display: flex; align-items: center; min-width: 80px; }
@@ -16,33 +15,34 @@
 .logo { display: flex; align-items: center; gap: 8px; }
 .logoIcon {
   width: 28px; height: 28px; border-radius: 8px;
-  background: var(--red); color: white;
+  background: var(--green-dark); color: white;
   display: flex; align-items: center; justify-content: center;
   font-size: 0.9rem; font-weight: 700;
 }
 .logoText {
-  font-size: 1rem; font-weight: 700; color: var(--t1);
+  font-size: 1rem; font-weight: 700; color: var(--green-dark);
   letter-spacing: -0.3px;
 }
+.logoText span { color: var(--amber); }
 
 .backBtn {
   width: 36px; height: 36px; border-radius: 10px;
-  background: var(--surface-2); border: 1px solid var(--border);
+  background: var(--cream-dark); border: 1px solid var(--border);
   color: var(--t1); cursor: pointer; display: flex;
   align-items: center; justify-content: center;
   transition: var(--transition);
 }
-.backBtn:hover { background: var(--surface-3); }
+.backBtn:hover { background: var(--cream-deeper); }
 
 .screenLabel { font-size: 0.85rem; font-weight: 600; color: var(--t2); }
 
 .callBtn {
   display: flex; align-items: center; gap: 6px;
-  background: var(--red); color: white; border: none;
+  background: var(--red-alert); color: white; border: none;
   padding: 8px 14px; border-radius: 100px;
   font-size: 0.8rem; font-weight: 700;
   cursor: pointer; font-family: 'Sora', sans-serif;
   transition: var(--transition);
-  box-shadow: 0 0 16px var(--red-glow);
+  box-shadow: 0 2px 12px rgba(212,43,43,0.3);
 }
-.callBtn:hover { transform: scale(1.05); box-shadow: 0 0 24px var(--red-glow); }
+.callBtn:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(212,43,43,0.4); }

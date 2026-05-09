@@ -23,7 +23,7 @@ export const emergencyData: Record<EmergencyType, EmergencyData> = {
   bleeding: {
     key: 'bleeding', emoji: '🩸', label: 'Bleeding',
     tagline: 'Cuts, wounds, heavy blood loss',
-    color: '#FF3B5C', glow: 'rgba(255,59,92,0.3)',
+    color: '#D42B2B', glow: 'rgba(212,43,43,0.2)',
     severity: 'critical', sevLabel: 'Act immediately',
     sevSub: 'Apply pressure right now.',
     chips: ['Bike accident, bleeding badly', 'Deep cut on hand', 'Wound not stopping', 'Bleeding from leg'],
@@ -44,7 +44,7 @@ export const emergencyData: Record<EmergencyType, EmergencyData> = {
   burns: {
     key: 'burns', emoji: '🔥', label: 'Burns',
     tagline: 'Heat, chemical or electrical burns',
-    color: '#FF8C42', glow: 'rgba(255,140,66,0.3)',
+    color: '#E8920A', glow: 'rgba(232,146,10,0.2)',
     severity: 'high', sevLabel: 'Cool it down now',
     sevSub: 'Do not use ice. Use cool running water.',
     chips: ['Touched hot stove', 'Hot water spilled on skin', 'Chemical burn', 'Cooking accident'],
@@ -65,7 +65,7 @@ export const emergencyData: Record<EmergencyType, EmergencyData> = {
   fracture: {
     key: 'fracture', emoji: '🦴', label: 'Fracture',
     tagline: 'Broken bone, sprain or dislocation',
-    color: '#A78BFA', glow: 'rgba(167,139,250,0.3)',
+    color: '#2D5A42', glow: 'rgba(45,90,66,0.2)',
     severity: 'moderate', sevLabel: 'Keep it still',
     sevSub: 'Do not move the injured area.',
     chips: ['Fell from bike, arm twisted', 'Cannot move wrist', 'Heard a crack', 'Ankle swollen badly'],
@@ -86,7 +86,7 @@ export const emergencyData: Record<EmergencyType, EmergencyData> = {
   'heart-attack': {
     key: 'heart-attack', emoji: '❤️', label: 'Heart Attack',
     tagline: 'Chest pain, cardiac emergency',
-    color: '#FF3B5C', glow: 'rgba(255,59,92,0.4)',
+    color: '#D42B2B', glow: 'rgba(212,43,43,0.25)',
     severity: 'critical', sevLabel: 'Call 112 first',
     sevSub: 'Every second matters. Call now.',
     chips: ['Chest pain spreading to arm', 'Sudden dizziness and nausea', 'Heavy pressure on chest', 'Cannot breathe properly'],
@@ -107,7 +107,7 @@ export const emergencyData: Record<EmergencyType, EmergencyData> = {
   choking: {
     key: 'choking', emoji: '😮‍💨', label: 'Choking',
     tagline: 'Something stuck in the throat',
-    color: '#38BDF8', glow: 'rgba(56,189,248,0.3)',
+    color: '#1C3A2E', glow: 'rgba(28,58,46,0.2)',
     severity: 'critical', sevLabel: 'Act immediately',
     sevSub: 'Ask them to cough hard right now.',
     chips: ['Food stuck in throat', 'Cannot breathe or speak', 'Baby is choking', 'Person turning blue'],
@@ -125,7 +125,7 @@ export const emergencyData: Record<EmergencyType, EmergencyData> = {
   fainting: {
     key: 'fainting', emoji: '💫', label: 'Fainting',
     tagline: 'Person collapsed or feeling faint',
-    color: '#818CF8', glow: 'rgba(129,140,248,0.3)',
+    color: '#4A7C5E', glow: 'rgba(74,124,94,0.2)',
     severity: 'moderate', sevLabel: 'Lay them down',
     sevSub: 'Get them flat immediately.',
     chips: ['Person suddenly collapsed', 'Feeling dizzy and weak', 'About to pass out', 'Lost consciousness briefly'],
@@ -143,7 +143,7 @@ export const emergencyData: Record<EmergencyType, EmergencyData> = {
   seizure: {
     key: 'seizure', emoji: '⚡', label: 'Seizure',
     tagline: 'Convulsions or fits',
-    color: '#FBBF24', glow: 'rgba(251,191,36,0.3)',
+    color: '#E8920A', glow: 'rgba(232,146,10,0.2)',
     severity: 'high', sevLabel: 'Keep them safe',
     sevSub: 'Do not hold them down.',
     chips: ['Person having a fit', 'Body shaking uncontrollably', 'Fell and convulsing', 'History of epilepsy'],
@@ -161,7 +161,7 @@ export const emergencyData: Record<EmergencyType, EmergencyData> = {
   'snake-bite': {
     key: 'snake-bite', emoji: '🐍', label: 'Snake Bite',
     tagline: 'Bitten by a snake',
-    color: '#34D399', glow: 'rgba(52,211,153,0.3)',
+    color: '#2D5A42', glow: 'rgba(45,90,66,0.2)',
     severity: 'critical', sevLabel: 'Get to hospital fast',
     sevSub: 'Keep the person still. Go now.',
     chips: ['Snake bit my leg', 'Bite mark on arm', 'Not sure if snake was poisonous', 'Swelling after bite'],
