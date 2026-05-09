@@ -1,0 +1,83 @@
+/* components/screens/AnalyzingScreen.module.css */
+
+.analyzing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  gap: 2rem;
+  min-height: calc(100vh - 64px);
+  position: relative;
+  z-index: 1;
+}
+
+.ring {
+  width: 120px;
+  height: 120px;
+  position: relative;
+}
+
+.spinner {
+  animation: spin 2s linear infinite;
+}
+
+.innerIcon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+}
+
+.title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  color: var(--green-dark);
+  text-align: center;
+}
+
+.steps {
+  list-style: none;
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.step {
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: var(--transition);
+}
+
+.stepActive {
+  color: var(--text-primary);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+}
+
+.stepDone {
+  color: var(--green-mid);
+  font-weight: 500;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.dotPulse {
+  background: var(--amber);
+  animation: pulse 1s infinite;
+}

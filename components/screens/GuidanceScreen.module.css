@@ -1,0 +1,347 @@
+/* components/screens/GuidanceScreen.module.css */
+
+.guidance {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.5rem 2rem 4rem;
+  gap: 1.8rem;
+  max-width: 860px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Banner */
+.banner {
+  width: 100%;
+  border-radius: var(--border-radius);
+  padding: 20px 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.bannerCritical {
+  background: linear-gradient(135deg, #2D1C1C 0%, #4A1E1E 100%);
+  color: white;
+}
+
+.bannerHigh {
+  background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+  color: white;
+}
+
+.bannerIcon { font-size: 2.2rem; }
+
+.bannerText strong {
+  font-size: 1.05rem;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.bannerText p {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.callBtn {
+  margin-left: auto;
+  background: white;
+  color: var(--red-alert);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.callBtn:hover {
+  background: #FFF0F0;
+  transform: scale(1.04);
+}
+
+/* Two-column layout */
+.columns {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .columns { grid-template-columns: 1fr; }
+}
+
+/* Steps card */
+.stepsCard {
+  background: var(--white);
+  border-radius: var(--border-radius);
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+}
+
+.stepsCard h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  color: var(--green-dark);
+  margin-bottom: 20px;
+}
+
+.stepsList { display: flex; flex-direction: column; }
+
+.stepItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(28, 58, 46, 0.07);
+  transition: var(--transition);
+}
+
+.stepItem:last-child { border-bottom: none; }
+
+.stepDone { opacity: 0.7; }
+
+.stepNum {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--green-pale);
+  color: var(--green-dark);
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+
+.stepNumDone {
+  background: var(--green-dark);
+  color: white;
+}
+
+.stepContent { flex: 1; }
+
+.stepTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.stepDetail {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.stepActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.stepBtn {
+  padding: 5px 14px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid;
+  font-family: 'DM Sans', sans-serif;
+  transition: var(--transition);
+}
+
+.btnComplete {
+  border-color: var(--green-mid);
+  color: var(--green-mid);
+  background: transparent;
+}
+
+.btnComplete:hover { background: var(--green-mid); color: white; }
+
+.btnDone {
+  background: var(--green-mid);
+  color: white;
+  border-color: var(--green-mid);
+}
+
+.btnProgress {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: transparent;
+}
+
+.btnProgress:hover { background: var(--amber-pale); }
+
+.btnProgressActive {
+  background: var(--amber-pale);
+  color: var(--amber);
+  border-color: var(--amber);
+}
+
+/* Side panel */
+.sidePanel { display: flex; flex-direction: column; gap: 16px; }
+
+.missingCard {
+  background: var(--cream);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1.5px dashed #d8cdb8;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.missingCard h4 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 6px;
+}
+
+.missingItem {
+  font-size: 0.88rem;
+  color: var(--amber);
+  font-weight: 600;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(232, 146, 10, 0.15);
+}
+
+.missingAlt {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding: 3px 0 3px 14px;
+}
+
+.missingAlt::before {
+  content: '→ ';
+  color: var(--amber);
+}
+
+.mapCard {
+  margin-top: 8px;
+  background: var(--green-dark);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'DM Sans', sans-serif;
+  text-align: left;
+  width: 100%;
+}
+
+.mapCard:hover { background: var(--green-mid); transform: scale(1.02); }
+
+.mapCard span { font-size: 1.3rem; }
+
+.mapCard p {
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+.mapCard p:first-child {
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.mapCard p:last-child { opacity: 0.7; }
+
+.tipCard {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.tipCard h4 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 10px;
+}
+
+.tipText {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* Status check */
+.statusCheck {
+  width: 100%;
+  background: var(--white);
+  border-radius: var(--border-radius);
+  padding: 24px 28px;
+  box-shadow: var(--shadow-card);
+}
+
+.statusCheck h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.statusBtns {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.statusBtn {
+  flex: 1;
+  min-width: 130px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 2px solid;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: var(--transition);
+}
+
+.statusYes {
+  border-color: var(--green-mid);
+  color: var(--green-mid);
+  background: transparent;
+}
+
+.statusYes:hover,
+.statusYes.statusSelected {
+  background: var(--green-mid);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.statusNo {
+  border-color: var(--red-alert);
+  color: var(--red-alert);
+  background: transparent;
+}
+
+.statusNo:hover,
+.statusNo.statusSelected {
+  background: var(--red-alert);
+  color: white;
+  transform: translateY(-2px);
+}

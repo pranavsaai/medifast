@@ -1,0 +1,52 @@
+/* components/ui/FlowStrip.module.css */
+.strip {
+  display: flex;
+  align-items: center;
+  background: var(--white);
+  border-radius: 100px;
+  box-shadow: var(--shadow-card);
+  padding: 6px 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 680px;
+  width: 100%;
+}
+
+.strip::-webkit-scrollbar { display: none; }
+
+.nodeWrap {
+  display: flex;
+  align-items: center;
+}
+
+.node {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 100px;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.icon { font-size: 0.9rem; }
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.node.active {
+  background: var(--green-dark);
+}
+
+.node.active .label {
+  color: white;
+}
+
+.sep {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  padding: 0 2px;
+}
