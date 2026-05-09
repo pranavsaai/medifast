@@ -7,21 +7,33 @@ import Toast from '@/components/ui/Toast';
 import styles from './AiGuidanceScreen.module.css';
 
 export default function AiGuidanceScreen() {
-  const { selected, aiResponse, setAiResponse, setAiLoading, setScreen, aiLoading, pushStepHistory } = useApp();
+  const {
+    selected,
+    aiResponse,
+    setAiResponse,
+    setAiLoading,
+    setScreen,
+    aiLoading,
+    pushStepHistory,
+  } = useApp();
   const [toast, setToast] = useState<string | null>(null);
   const [answerAnim, setAnswerAnim] = useState<'yes' | 'no' | null>(null);
 
   if (!selected) return null;
   const data = emergencyData[selected];
 
-  // ── ESCALATE ────────────────────────────────────────────────────────────────
+  // CSS class variants — no inline styles
+  const sevClass =
+    data.severity === 'critical' ? styles.sevCritical :
+    data.severity === 'high'     ? styles.sevHigh     :
+                                   styles.sevModerate;
+
+  // ── ESCALATE ────────────────────────────────────────────────
   if (aiResponse?.status === 'escalate') {
     return (
       <main className={styles.endPage}>
-        <div className={`${styles.endCard} ${styles.danger} animate-up`}>
-          <div className={styles.endRing}>
-            <span>🚨</span>
-          </div>
+        <div className={`${styles.endCard} animate-up`}>
+          <div className={styles.endRing}><span>🚨</span></div>
           <h2>Call 112 Now</h2>
           <p>{aiResponse.instruction}</p>
           <a href="tel:112" className={styles.callBig}>
@@ -36,18 +48,16 @@ export default function AiGuidanceScreen() {
     );
   }
 
-  // ── COMPLETE ────────────────────────────────────────────────────────────────
+  // ── COMPLETE ─────────────────────────────────────────────────
   if (aiResponse?.status === 'complete') {
     return (
       <main className={styles.endPage}>
-        <div className={`${styles.endCard} ${styles.success} animate-up`}>
-          <div className={`${styles.endRing} ${styles.successRing}`}>
-            <span>✅</span>
-          </div>
+        <div className={`${styles.endCard} animate-up`}>
+          <div className={`${styles.endRing} ${styles.successRing}`}><span>✅</span></div>
           <h2>All Done</h2>
           <p>{aiResponse.instruction}</p>
           <button className={styles.reportBtn} onClick={() => setScreen('report')}>
-            See full report
+            View Full Report
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
@@ -58,46 +68,58 @@ export default function AiGuidanceScreen() {
     );
   }
 
-  // ── INSTRUCTION ─────────────────────────────────────────────────────────────
-  const handleAnswer = async (answer: 'Yes' | 'No') => {
-    if (aiLoading) return;
-    setAnswerAnim(answer === 'Yes' ? 'yes' : 'no');
-    if (aiResponse?.instruction) pushStepHistory(aiResponse.instruction);
+  // ── MAIN GUIDANCE ────────────────────────────────────────────
+  const handleAnswer = async (ans: 'yes' | 'no') => {
+    if (aiLoading || !aiResponse) return;
+    setAnswerAnim(ans);
+    pushStepHistory(aiResponse.instruction);
     setAiLoading(true);
-    setTimeout(() => setAnswerAnim(null), 400);
     try {
-      const next = await sendAnswer(answer);
+      // sendAnswer takes exactly 1 argument: 'Yes' | 'No'
+      const next = await sendAnswer(ans === 'yes' ? 'Yes' : 'No');
       setAiResponse(next);
     } catch {
-      setToast('⚠️ Connection issue — please try again');
+      setToast('Connection error. Try again.');
     } finally {
       setAiLoading(false);
+      setTimeout(() => setAnswerAnim(null), 300);
     }
   };
 
   return (
     <main className={styles.page}>
-      {/* Emergency label */}
-      <div className={`${styles.emergencyTag} animate-up`} style={{ '--c': data.color } as React.CSSProperties}>
-        {data.emoji} {data.label}
+      {/* Context bar */}
+      <div className={`${styles.contextBar} ${sevClass} animate-up`}>
+        <span className={styles.contextEmoji}>{data.emoji}</span>
+        <div className={styles.contextInfo}>
+          <div className={styles.contextLabel}>Active Emergency</div>
+          <div className={styles.contextTitle}>{data.label}</div>
+        </div>
+        <span className={`${styles.contextSev} ${sevClass}`}>
+          {data.sevLabel}
+        </span>
       </div>
 
       {/* Instruction card */}
-      <div className={`${styles.instructionCard} animate-up d1 ${aiLoading ? styles.loadingCard : ''}`}
-           style={{ '--c': data.color, '--g': data.glow } as React.CSSProperties}>
-        {aiLoading ? (
-          <div className={styles.loadingState}>
-            <div className={styles.thinkingDots}>
-              <span /><span /><span />
+      <div className={`${styles.instructionCard} animate-up d1`}>
+        <div className={`${styles.cardTopBar} ${sevClass}Bar`} />
+        <div className={styles.cardBody}>
+          {aiLoading ? (
+            <div className={styles.loadingState}>
+              <div className={styles.thinkingDots}>
+                <span /><span /><span />
+              </div>
+              <p>Getting the next step…</p>
             </div>
-            <p>Preparing next step...</p>
-          </div>
-        ) : (
-          <>
-            <div className={styles.stepBadge}>What to do</div>
-            <p className={styles.instruction}>{aiResponse?.instruction}</p>
-          </>
-        )}
+          ) : (
+            <>
+              <div className={`${styles.stepBadge} ${sevClass}Badge`}>
+                Step Instruction
+              </div>
+              <p className={styles.instruction}>{aiResponse?.instruction}</p>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Check question */}
@@ -112,44 +134,23 @@ export default function AiGuidanceScreen() {
       <div className={`${styles.actions} animate-up d3`}>
         <button
           className={`${styles.btnNo} ${answerAnim === 'no' ? styles.btnPressed : ''}`}
-          onClick={() => handleAnswer('No')}
-          disabled={aiLoading}
+          onClick={() => handleAnswer('no')}
+          disabled={aiLoading || !aiResponse}
         >
           <span className={styles.btnIcon}>✗</span>
-          <span>Not yet</span>
+          No, not working
         </button>
         <button
           className={`${styles.btnYes} ${answerAnim === 'yes' ? styles.btnPressed : ''}`}
-          onClick={() => handleAnswer('Yes')}
-          disabled={aiLoading}
+          onClick={() => handleAnswer('yes')}
+          disabled={aiLoading || !aiResponse}
         >
           <span className={styles.btnIcon}>✓</span>
-          <span>Done</span>
+          Yes, done!
         </button>
       </div>
 
-      {/* Step history */}
-      <CompletedSteps />
-
       {toast && <Toast message={toast} onDone={() => setToast(null)} />}
     </main>
-  );
-}
-
-function CompletedSteps() {
-  const { stepHistory } = useApp();
-  if (stepHistory.length === 0) return null;
-  return (
-    <div className={styles.history}>
-      <p className={styles.historyLabel}>Steps done ({stepHistory.length})</p>
-      <div className={styles.historyList}>
-        {stepHistory.map((s, i) => (
-          <div key={i} className={styles.historyItem}>
-            <span className={styles.historyCheck}>✓</span>
-            <span>{s}</span>
-          </div>
-        ))}
-      </div>
-    </div>
   );
 }

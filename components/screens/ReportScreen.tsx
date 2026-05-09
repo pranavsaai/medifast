@@ -40,8 +40,9 @@ export default function ReportScreen() {
     <main className={styles.page}>
       {/* Header */}
       <div className={`${styles.header} animate-up`}>
+        <div className={styles.headerBg} />
         <div className={styles.headerEmoji}>{data.emoji}</div>
-        <div>
+        <div className={styles.headerInfo}>
           <div className={styles.headerLabel}>Emergency Report</div>
           <h2 className={styles.headerTitle}>{data.label}</h2>
           {reportTime && <div className={styles.headerTime}>{reportTime}</div>}
@@ -91,9 +92,11 @@ export default function ReportScreen() {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
           </svg>
-          Save report
+          Save Report
         </button>
-        <button className={styles.homeBtn} onClick={resetAll}>New emergency</button>
+        <button className={styles.homeBtn} onClick={resetAll}>
+          New Emergency
+        </button>
       </div>
     </main>
   );

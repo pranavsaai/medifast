@@ -4,7 +4,7 @@
 import styles from './FlowStrip.module.css';
 import { AppScreen } from '@/lib/store';
 
-const steps: { id: AppScreen; label: string; icon: string }[] = [
+const steps: { id: AppScreen | 'guidance'; label: string; icon: string }[] = [
   { id: 'home',      label: 'Choose',   icon: '📋' },
   { id: 'describe',  label: 'Describe', icon: '💬' },
   { id: 'analyzing', label: 'Analysis', icon: '🧠' },

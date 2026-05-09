@@ -5,7 +5,6 @@ import { emergencyData } from '@/lib/emergencyData';
 import { startEmergencyChat } from '@/lib/aiService';
 import styles from './AnalyzingScreen.module.css';
 
-// User-friendly steps — no NLP/ML/RAG jargon
 const STEPS = [
   { icon: '🔍', label: 'Reading your situation...' },
   { icon: '📋', label: 'Finding the right steps...' },
@@ -27,7 +26,7 @@ export default function AnalyzingScreen() {
     const geminiPromise = startEmergencyChat(label, description)
       .then(resp => { if (!cancelled) { setAiResponse(resp); setAiLoading(false); } })
       .catch(err => {
-        console.error('Gemini error:', err);
+        console.error('AI error:', err);
         if (!cancelled) setError('Could not connect. Check your internet and try again.');
       });
 
@@ -48,13 +47,14 @@ export default function AnalyzingScreen() {
 
   return (
     <main className={styles.page}>
-      {/* Big pulsing ring */}
       <div className={styles.ringWrap}>
-        <div className={styles.ring1} />
-        <div className={styles.ring2} />
-        <div className={styles.ring3} />
-        <div className={styles.centerIcon}>
-          {error ? '⚠️' : STEPS[current]?.icon ?? '✅'}
+        <div className={styles.ring} />
+        <div className={styles.ring} />
+        <div className={styles.ring} />
+        <div className={styles.centerCircle}>
+          <span className={styles.centerIcon}>
+            {error ? '⚠️' : STEPS[current]?.icon ?? '✅'}
+          </span>
         </div>
       </div>
 
@@ -68,21 +68,21 @@ export default function AnalyzingScreen() {
           <h2 className={styles.title}>Preparing your guide</h2>
           <p className={styles.sub}>This takes just a moment</p>
 
-          <div className={styles.steps}>
+          <div className={styles.stepsList}>
             {STEPS.map((s, i) => (
               <div
                 key={i}
                 className={`${styles.step}
-                  ${i === current ? styles.stepActive : ''}
-                  ${done.includes(i) || i < current ? styles.stepDone : ''}`}
+                  ${i === current ? styles.active : ''}
+                  ${done.includes(i) || i < current ? styles.done : ''}`}
               >
                 <div className={styles.stepDot}>
                   {(done.includes(i) || i < current) ? (
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M20 6L9 17l-5-5"/>
                     </svg>
                   ) : i === current ? (
-                    <div className={styles.dotSpinner} />
+                    <div className={styles.spinner} />
                   ) : null}
                 </div>
                 <span>{s.label}</span>
