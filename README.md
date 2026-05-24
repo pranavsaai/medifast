@@ -1,6 +1,6 @@
 # Medifast
 
-[Live Demo](https://medifast-pazu.vercel.app)
+[Live Demo](https://medifast-pazu.vercel.app) : https://medifast-pazu.vercel.app
 
 ---
 
@@ -104,7 +104,7 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for more 
 
 ## Contact
 
-For questions, please contact the @Mouleendra0511 via GitHub.
+For questions, please contact the [Mouleendra0511](https://github.com/Mouleendra0511)] via GitHub.
 
 ---
 
